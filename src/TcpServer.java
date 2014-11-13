@@ -15,23 +15,31 @@ import java.util.Date;
 public class TcpServer implements Runnable {
 	ServerSocket serverSocket;
 	Thread[] threadArr;
+	ConnectDB idb = new ConnectDB();
 
-//	public static void main(String[] args) {
-//		// 5개의 쓰레드를 생성하는 서버를 생성한다.
-//		TcpServer server = new TcpServer(5);
-//		server.start();
-//	}
+	public static void main(String[] args) {
+		// 5개의 쓰레드를 생성하는 서버를 생성한다.
+		
+		TcpServer server = new TcpServer(5);
+		server.start();
+		
+	}
 
 	public TcpServer(int num) {
 		try {
 			// 서버 소켓을 생성하여 7777번 포트와 바인딩.
 			serverSocket = new ServerSocket(7777);
 			System.out.println(getTime() + " 서버가 준비되었습니다.");
-
+			
+			idb.ConnectDatabase();		// 서버의 DB에 접속함.
+			System.out.println(getTime() + " DB 접속을 완료하였음.");
 			threadArr = new Thread[num];
+			idb.CloseDatabase();
+			System.out.println(getTime() + " DB 접속을 종료합니다.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public void start() {
